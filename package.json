@@ -1,0 +1,19 @@
+{
+  "name": "honojs-todolist-api-rest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hono/node-server": "^1.4.0",
+    "hono": "^3.12.3",
+    "zod": "^3.22.4"
+  }
+}

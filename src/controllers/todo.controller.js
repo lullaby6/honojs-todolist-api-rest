@@ -79,7 +79,7 @@ export async function createTodoController(ctx) {
         return ctx.json({
             message: 'Todo created successfully',
             data: todo
-        })
+        }, 201)
     } catch (error) {
         return ctx.json({
             error: error.message

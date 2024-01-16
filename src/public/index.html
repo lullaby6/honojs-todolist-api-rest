@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo List</title>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/gh/lullaby6/lullaby-ui/cdn.js"></script>
+</head>
+<body>
+    <div class="ly-flex-center ly-bg-light-alt h-screen">
+        <div
+            class="ly-card w-fit relative"
+
+            x-data="{ todos: [], title: '' }"
+            x-init="todos = (await (await fetch('/api/todo')).json()).data"
+        >
+            <template x-for="todo in todos">
+                <div 
+                    class="py-4 px-4 border ly-border-light flex items-center justify-between gap-2"
+                    
+                    key="todo.id"
+                    x-key="todo.id"
+                    x-bind:id="'todo-' + todo.id"
+                >
+                    <input
+                        class="ly-input"
+
+                        x-bind:value="todo.title"
+                        x-init="htmx.process($el)"
+
+                        type="text"
+                        spellcheck="false"
+                        autocomplete="off"
+                    />
+                    <button 
+                        class="ly-badget w-fit"
+
+                        x-bind:hx-delete="'/api/todo/' + todo.id"
+                        hx-trigger="click"
+                        hx-swap="none"
+
+                        x-on:click.debounce.100ms="todos = (await (await fetch('/api/todo')).json()).data"
+                        x-init="htmx.process($el)"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </template>
+
+            <form 
+                class="ly-card w-full"
+
+                action="/api/todo" 
+                method="post" 
+
+                hx-post="/api/todo"
+                hx-trigger="submit"
+                hx-swap="none"
+
+                x-on:submit.debounce.100ms="todos = (await (await fetch('/api/todo')).json()).data; title = '';"
+            >
+                <input 
+                    class="ly-input" 
+
+                    x-bind:value="title"
+                    x-on:input="title = $event.target.value"
+
+                    type="text" 
+                    name="title" 
+                    placeholder="ToDo title..."
+                    spellcheck="false"
+                    autocomplete="off"
+                >
+                <button class="ly-button w-full" type="submit">Add ToDo</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

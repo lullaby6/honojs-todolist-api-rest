@@ -41,8 +41,14 @@ export async function getTodoByIdController(ctx) {
 export async function createTodoController(ctx) {
     let body
 
+    const contentType = await ctx.req.header('Content-Type')
+
     try {
-        body = await ctx.req.json()
+        if (contentType === 'application/json') {
+            body = await ctx.req.json()
+        } else {
+            body = await ctx.req.parseBody()
+        }
     } catch (error) {
         return ctx.json({
             error: 'invalid body'
@@ -92,8 +98,14 @@ export async function updateTodoByIdController(ctx) {
 
     let body
 
+    const contentType = await ctx.req.header('Content-Type')
+
     try {
-        body = await ctx.req.json()
+        if (contentType === 'application/json') {
+            body = await ctx.req.json()
+        } else {
+            body = await ctx.req.parseBody()
+        }
     } catch (error) {
         return ctx.json({
             error: 'invalid body'

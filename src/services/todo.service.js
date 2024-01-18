@@ -3,7 +3,7 @@ import ResponseError from '../utils/responseError.js'
 
 const todos = [
     {
-        id: uuidv4(2), 
+        id: uuidv4(2),
         title: 'Todo 1',
         done: false
     },
@@ -19,7 +19,7 @@ export async function getTodoByIdService(id) {
     if (!todo) {
         throw new ResponseError('todo not found', 404)
     }
-    
+
     return todo
 }
 
@@ -42,7 +42,7 @@ export async function updateTodoByIdService(id, data) {
     if (todoIndex === -1) {
         throw new ResponseError('todo not found', 404)
     }
-    
+
     const todo = todos[todoIndex]
 
     const updatedTodo = {

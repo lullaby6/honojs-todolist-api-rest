@@ -152,7 +152,7 @@ export async function updateTodoByIdController(ctx) {
 export async function deleteTodoByIdController(ctx) {
     const id = ctx.req.param('id')
 
-    try {        
+    try {
         const deletedTodo = await deleteTodoByIdService(id)
 
         return ctx.json({

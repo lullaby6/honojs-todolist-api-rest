@@ -7,8 +7,8 @@ import todoRoute from './routes/todo.route.js'
 const app = new Hono()
 const api = new Hono().basePath('/api')
 
-app.get('*', serveStatic({ 
-  root: './src/public/'
+app.get('*', serveStatic({
+	root: './src/public/'
 }))
 
 api.route('/todo', todoRoute)
@@ -18,6 +18,6 @@ const port = 3000
 console.log(`Server is running on port ${port}`)
 
 serve({
-  fetch: app.fetch,
-  port
+	fetch: app.fetch,
+	port
 })

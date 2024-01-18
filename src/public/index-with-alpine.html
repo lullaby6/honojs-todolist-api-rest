@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,6 @@
     <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
     <script src="https://unpkg.com/mustache@latest"></script>
 
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/gh/lullaby6/lullaby-ui/cdn.js"></script>
@@ -19,8 +19,6 @@
         id="todos-loader"
 
         class="ly-card w-fit h-fit relative"
-
-        x-data="{ title: '' }"
 
         hx-ext="client-side-templates"
         hx-trigger="load, reload"
@@ -40,14 +38,11 @@
             hx-post="/api/todo"
             hx-trigger="submit"
             hx-swap="none"
-            hx-on::after-request="event.target.dispatchEvent(new CustomEvent('clear')); htmx.trigger('#todos-loader', 'reload');"
+            hx-on::after-request="event.target.querySelectorAll('input').forEach(input => input.value = ''); htmx.trigger('#todos-loader', 'reload');"
 
-            x-on:clear="title = ''"
         >
             <input
                 class="ly-input"
-
-                x-model="title"
 
                 type="text"
                 name="title"

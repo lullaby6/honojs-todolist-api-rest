@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo List</title>
 
+    <script src="http://localhost:3000/assets/main.js"></script>
+
     <script src="https://unpkg.com/htmx.org@latest" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
     <script src="https://unpkg.com/mustache@latest"></script>
@@ -23,7 +25,7 @@
         x-data="{ title: '' }"
 
         hx-ext="client-side-templates"
-        hx-trigger="load, reload"
+        hx-trigger="load, reload, every 2.5s"
         hx-get="/api/todo"
         hx-swap="innerHTML"
         hx-target="#todos"
@@ -40,7 +42,7 @@
             hx-post="/api/todo"
             hx-trigger="submit"
             hx-swap="none"
-            hx-on::after-request="event.target.dispatchEvent(new CustomEvent('clear')); htmx.trigger('#todos-loader', 'reload');"
+            hx-on::after-request="event.target.doEvent('clear'); htmx.trigger('#todos-loader', 'reload');"
 
             x-on:clear="title = ''"
         >
@@ -60,12 +62,20 @@
 
         <template id="todo-template">
             {{#data.data}}
-            <div
+            <form
                 class="py-4 px-4 border ly-border-light flex items-center justify-between gap-2"
+                id="todo-{{id}}"
+
+                hx-patch="/api/todo/{{id}}"
+                hx-trigger="update-todo"
+                hx-swap="none"
             >
                 <input
                     class="ly-input"
 
+                    x-on:keyup.debounce.250ms="htmx.trigger('#todo-{{id}}', 'update-todo')"
+
+                    name="title"
                     value="{{title}}"
 
                     type="text"
@@ -79,10 +89,12 @@
                     hx-trigger="click"
                     hx-swap="none"
                     hx-on::after-request="htmx.trigger('#todos-loader', 'reload');"
+
+                    type="button"
                 >
                     Delete
                 </button>
-            </div>
+            </form>
             {{/data.data}}
         </template>
     </div>
